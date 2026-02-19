@@ -1,0 +1,31 @@
+---
+name: validate
+description: Run the full validation pipeline for {{DOMAIN}} — {{BUILD_TOOL}} type-checking, linting, and truth file cross-reference.
+allowed-tools: Read, Bash, Glob, Grep, Task
+---
+
+# Validation Pipeline — {{DOMAIN}}
+
+## Steps
+
+1. **Type-check / Compile**: Run `{{BUILD_CMD}}`
+   - Report all errors with file paths and line numbers
+
+2. **Lint**: Run `{{LINT_CMD}}`
+   - Report all warnings and errors
+
+3. **Truth File Cross-Reference**:
+   - Scan all `{{FILE_EXTENSIONS}}` files for imports from `{{SDK_NAME}}`
+   - Cross-reference each import against `{{TRUTH_FILE}}`
+   - Report any imports not found in the truth file
+
+4. **Unit Tests**: Run `{{TEST_CMD}}`
+   - Report failures with file paths and test names
+
+5. **Smoke Test**: Run `{{SMOKE_CMD}}` (if configured)
+   - Reports runtime errors the type-checker cannot catch
+
+6. **Code Review** (optional):
+   - If the user requests a full review, spawn the `code-reviewer` agent on changed files
+
+7. **Summary**: Print a pass/fail summary

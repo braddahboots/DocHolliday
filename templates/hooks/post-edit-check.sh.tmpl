@@ -1,0 +1,70 @@
+#!/bin/bash
+# PostToolUse hook: Verify edits (TEMPLATE)
+# Replace {{PLACEHOLDERS}} during bootstrap
+
+INPUT=$(cat)
+FILE_PATH=$(echo "$INPUT" | jq -r '.tool_input.file_path // .tool_input.path // empty' 2>/dev/null)
+
+if [ -z "$FILE_PATH" ]; then
+  exit 0
+fi
+
+# ============================================
+# CONFIGURATION — Replace these placeholders
+# ============================================
+FILE_EXTENSIONS=({{FILE_EXTENSIONS}})    # e.g., ".ts" ".tsx" ".js"
+BUILD_CMD="{{BUILD_CMD}}"                # e.g., "npx tsc --noEmit"
+TRUTH_FILE="{{TRUTH_FILE}}"              # e.g., "./hytopia-truth.md"
+IMPORT_PATTERN="{{IMPORT_PATTERN}}"      # e.g., "from 'hytopia'" regex
+
+# ============================================
+# Check if file matches configured extensions
+# ============================================
+MATCH=false
+for ext in "${FILE_EXTENSIONS[@]}"; do
+  if [[ "$FILE_PATH" == *"$ext" ]]; then
+    MATCH=true
+    break
+  fi
+done
+
+if [ "$MATCH" = false ]; then
+  exit 0
+fi
+
+FEEDBACK=""
+
+# ============================================
+# Truth file cross-reference
+# ============================================
+if [ -n "$TRUTH_FILE" ] && [ -f "$TRUTH_FILE" ] && [ -n "$IMPORT_PATTERN" ]; then
+  IMPORTS=$(grep -oP "$IMPORT_PATTERN" "$FILE_PATH" 2>/dev/null | sort -u)
+  if [ -n "$IMPORTS" ]; then
+    UNKNOWN=""
+    while IFS= read -r import; do
+      if ! grep -q "$import" "$TRUTH_FILE"; then
+        UNKNOWN="$UNKNOWN  - $import\n"
+      fi
+    done <<< "$IMPORTS"
+    if [ -n "$UNKNOWN" ]; then
+      FEEDBACK="WARNING: Unknown imports in $FILE_PATH:\n$UNKNOWN\nNot found in $TRUTH_FILE."
+    fi
+  fi
+fi
+
+# ============================================
+# Type-check / compile
+# ============================================
+if [ -n "$BUILD_CMD" ]; then
+  BUILD_OUTPUT=$($BUILD_CMD 2>&1)
+  if [ $? -ne 0 ]; then
+    ERRORS=$(echo "$BUILD_OUTPUT" | head -20)
+    FEEDBACK="$FEEDBACK\n\nBUILD CHECK FAILED:\n$ERRORS"
+  fi
+fi
+
+if [ -n "$FEEDBACK" ]; then
+  echo -e "$FEEDBACK"
+fi
+
+exit 0

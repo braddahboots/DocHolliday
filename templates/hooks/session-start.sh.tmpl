@@ -1,0 +1,31 @@
+#!/bin/bash
+# SessionStart hook: Re-inject critical facts (TEMPLATE)
+# Replace {{PLACEHOLDERS}} during bootstrap
+
+cat << 'EOF'
+## Session Start — Critical Facts
+
+### Infrastructure Reminders
+- Read CODEBASE_OVERVIEW.md before modifying files
+- Read the truth file before using any SDK/framework API
+- Check .claude/rules/ for domain-specific rules when working on relevant files
+- Scope discipline: only modify files relevant to the current task
+
+### Verification Protocol
+1. Truth file → 2. Official docs → 3. Ask user. Never guess.
+
+### Common AI Failure Modes to Avoid
+- Do NOT fabricate APIs — if you can't verify it exists, ask
+- Do NOT modify unrelated files — stay in scope
+- Do NOT self-verify — let hooks and the reviewer agent validate your work
+- Do NOT leave wrong code with warning comments — delete fabricated code entirely
+
+EOF
+
+# ============================================
+# PROJECT-SPECIFIC FACTS
+# Replace with SDK/framework facts below:
+# ============================================
+cat << 'PROJECT_EOF'
+{{SDK_CRITICAL_FACTS}}
+PROJECT_EOF

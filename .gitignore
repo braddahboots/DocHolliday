@@ -1,0 +1,21 @@
+# User-specific settings
+.claude/settings.local.json
+
+# Generated files (regenerate with scripts)
+*-truth.md
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Dependencies (project-specific — adjust after bootstrap)
+node_modules/
+__pycache__/
+.venv/
+target/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
