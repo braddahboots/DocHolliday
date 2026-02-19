@@ -87,7 +87,7 @@ Before using any SDK/framework API:
 
 ## Project-Specific Configuration
 
-- **Project**: PRDGen AI — AI-powered PRD generation via guided conversation
+- **Project**: DocHolliday — AI-powered PRD generation via guided conversation
 - **Tech Stack**: Next.js 15 (App Router), TypeScript (strict), React 19, Tailwind CSS
 - **Primary SDK**: `@anthropic-ai/sdk` v0.68.x (Anthropic Claude TypeScript SDK)
 - **Secondary (future)**: GPT-4o via OpenAI SDK (post-MVP)

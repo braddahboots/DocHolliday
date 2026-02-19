@@ -6,9 +6,9 @@
 ## Root
 - `CLAUDE.md` — Project-level instructions for Claude Code (system prompt, file ownership, project config)
 - `CODEBASE_OVERVIEW.md` — This file. File map with descriptions.
-- `PRD.md` — Product Requirements Document for PRDGen AI (the product being built)
+- `PRD.md` — Product Requirements Document for DocHolliday (the product being built)
 - `ROADMAP.md` — Project status, milestones, decisions, and open questions
-- `README.md` — Repository README for PRDGen AI
+- `README.md` — Repository README for DocHolliday
 - `.gitignore` — Git ignore rules (node_modules, .env, truth files, IDE files)
 - `anthropic-sdk-truth.md` — SDK truth file for `@anthropic-ai/sdk` (STUB — regenerate after npm install)
 
@@ -23,7 +23,7 @@
 ### `.claude/agents/` — Subagent Definitions
 - `bootstrap-orchestrator.md` — Reads PRD and generates domain-specific config
 - `code-reviewer.md` — Reviews code for correctness, including Anthropic SDK and Next.js-specific checks
-- `implementer.md` — Implements features for PRDGen AI (Next.js + Anthropic SDK)
+- `implementer.md` — Implements features for DocHolliday (Next.js + Anthropic SDK)
 - `devops.md` — Git operations, Vercel deployments, CI/CD tasks
 
 ### `.claude/rules/` — Contextual Instructions (constraints only, never requirements)

@@ -44,7 +44,7 @@
 ## Project-Specific Notes
 > Added during development as patterns emerge
 
-- PRDGen AI is a Next.js App Router full-stack app. Frontend in `app/`, API routes in `app/api/`, shared types in `lib/types/`.
+- DocHolliday is a Next.js App Router full-stack app. Frontend in `app/`, API routes in `app/api/`, shared types in `lib/types/`.
 - All Anthropic SDK calls go through `app/api/` route handlers — never from client components.
 - Truth file at `anthropic-sdk-truth.md` is a STUB until `npm install` is run — regenerate with `bash scripts/generate-truth-file.sh`.
 - Model names are strings like `'claude-sonnet-4-5-20250929'` — there is no enum.
