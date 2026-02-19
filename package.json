@@ -1,0 +1,41 @@
+{
+  "name": "docholliday",
+  "version": "1.0.0",
+  "description": "Turn rough ideas into complete, high-quality, AI-coding-tool-ready Product Requirements Documents in minutes via guided conversation.",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "smoke": "node scripts/smoke-test.js",
+    "validate": "npm run typecheck && npm run lint && npm run test && npm run smoke"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://local_proxy@127.0.0.1:44210/git/braddahboots/DocHolliday"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "private": "true",
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.78.0",
+    "next": "^16.1.6",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.2.0",
+    "@types/node": "^25.3.0",
+    "@types/react": "^19.2.14",
+    "@vitejs/plugin-react": "^5.1.4",
+    "eslint": "^9.39.2",
+    "eslint-config-next": "^16.1.6",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^4.2.0",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.18"
+  }
+}

@@ -15,7 +15,7 @@ allowed-tools: Read, Bash, Glob, Grep, Task
    - Report all warnings and errors
 
 3. **Truth File Cross-Reference** (if `anthropic-sdk-truth.md` exists):
-   - Scan all `src/**/*.ts` and `src/**/*.tsx` files for imports from `@anthropic-ai/sdk`
+   - Scan all `app/**/*.ts`, `app/**/*.tsx`, `lib/**/*.ts`, and `lib/**/*.tsx` files for imports from `@anthropic-ai/sdk`
    - Cross-reference each import against `anthropic-sdk-truth.md`
    - Report any imports not found in the truth file
 

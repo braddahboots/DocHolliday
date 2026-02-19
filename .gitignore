@@ -31,5 +31,8 @@ out/
 *.swp
 *.swo
 
+# TypeScript
+tsconfig.tsbuildinfo
+
 # Testing
 coverage/

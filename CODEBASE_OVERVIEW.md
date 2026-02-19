@@ -10,7 +10,14 @@
 - `ROADMAP.md` — Project status, milestones, decisions, and open questions
 - `README.md` — Repository README for DocHolliday
 - `.gitignore` — Git ignore rules (node_modules, .env, truth files, IDE files)
-- `anthropic-sdk-truth.md` — SDK truth file for `@anthropic-ai/sdk` (STUB — regenerate after npm install)
+- `anthropic-sdk-truth.md` — SDK truth file for `@anthropic-ai/sdk` (generated from installed SDK types)
+- `package.json` — Project manifest: dependencies, scripts (dev, build, lint, typecheck, test, smoke, validate)
+- `tsconfig.json` — TypeScript configuration (strict mode enabled, bundler resolution, path aliases)
+- `next.config.ts` — Next.js configuration (currently default)
+- `postcss.config.mjs` — PostCSS configuration for Tailwind CSS v4
+- `eslint.config.mjs` — ESLint 9 flat config with next/core-web-vitals and next/typescript
+- `vitest.config.ts` — Vitest configuration (node environment, path aliases, tests in tests/)
+- `.env.example` — Template for required environment variables
 
 ## `scripts/` — Utility Scripts
 - `scripts/generate-truth-file.sh` — Generates truth file from TypeScript type definitions
@@ -51,12 +58,18 @@
 - `session-start.sh` — [SessionStart] Re-injects Anthropic SDK and Next.js 15 critical facts
 - `session-stop.sh` — [Stop] Warns about uncommitted .ts/.tsx/.json changes
 
-## Project Source (not yet created — will be populated during scaffolding task)
-> The following directories will be created during the "Project scaffolding" task:
-> - `app/` — Next.js App Router pages, layouts, and API routes
+## `app/` — Next.js App Router
+- `app/layout.tsx` — Root layout with Geist fonts and global CSS
+- `app/page.tsx` — Landing page with hero section and CTA
+- `app/globals.css` — Global styles (Tailwind CSS v4 import)
+
+## `tests/` — Unit Tests (Vitest)
+- `tests/setup.test.ts` — Project setup verification test (tsconfig strict mode)
+
+## Not Yet Created
+> The following directories will be created as features are implemented:
 > - `app/api/` — API route handlers (Anthropic SDK calls)
 > - `components/` — Shared React components
 > - `lib/` — Shared utilities, types, constants
 > - `lib/types/` — TypeScript type definitions (Session, Message, PRD, QualityScore, etc.)
-> - `tests/` — Unit tests (Vitest)
 > - `public/` — Static assets
