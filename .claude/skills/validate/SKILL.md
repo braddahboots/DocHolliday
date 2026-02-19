@@ -8,23 +8,23 @@ allowed-tools: Read, Bash, Glob, Grep, Task
 
 ## Steps
 
-1. **Type-check / Compile**: Run the project's build command (from CLAUDE.md)
+1. **Type-check**: Run `npx tsc --noEmit`
    - Report all errors with file paths and line numbers
 
-2. **Lint**: Run the project's lint command (from CLAUDE.md) if configured
+2. **Lint**: Run `npx next lint`
    - Report all warnings and errors
 
-3. **Truth File Cross-Reference** (if truth file exists):
-   - Scan all source files for imports from the primary SDK/framework
-   - Cross-reference each import against the truth file
+3. **Truth File Cross-Reference** (if `anthropic-sdk-truth.md` exists):
+   - Scan all `src/**/*.ts` and `src/**/*.tsx` files for imports from `@anthropic-ai/sdk`
+   - Cross-reference each import against `anthropic-sdk-truth.md`
    - Report any imports not found in the truth file
 
-4. **Unit Tests**: Run the project's test command (from CLAUDE.md) if configured
+4. **Unit Tests**: Run `npx vitest run`
    - Report failures with file paths and test names
 
-5. **Smoke Test**: Run the project's smoke test command (from CLAUDE.md) if configured
-   - Spawns the start command, waits for success/failure signals
-   - Reports runtime errors the type-checker cannot catch (constructor validation, asset resolution, missing required fields)
+5. **Smoke Test**: Run `node scripts/smoke-test.js` (if it exists)
+   - Spawns `npm run dev`, waits for "Ready" or "ready" on stdout
+   - Reports runtime errors the type-checker cannot catch
 
 6. **Code Review** (optional):
    - If the user requests a full review, spawn the `code-reviewer` agent on changed files

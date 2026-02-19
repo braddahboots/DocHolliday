@@ -4,18 +4,32 @@
 # Generated files (regenerate with scripts)
 *-truth.md
 
+# Environment variables (contains ANTHROPIC_API_KEY)
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
 # OS
 .DS_Store
 Thumbs.db
 
-# Dependencies (project-specific — adjust after bootstrap)
+# Dependencies
 node_modules/
-__pycache__/
-.venv/
-target/
+
+# Next.js
+.next/
+out/
+
+# Vercel
+.vercel/
 
 # IDE
 .vscode/
 .idea/
 *.swp
 *.swo
+
+# Testing
+coverage/

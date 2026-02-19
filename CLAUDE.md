@@ -86,12 +86,39 @@ Before using any SDK/framework API:
 - `devops` — Git operations, commits, CI/CD. Lightweight procedural tasks.
 
 ## Project-Specific Configuration
-> After running `/bootstrap`, this section will be populated with domain-specific details.
-> Until then, this is a template awaiting initialization.
 
-- **Tech Stack**: [populated by bootstrap]
-- **Primary SDK/Framework**: [populated by bootstrap]
-- **Truth File Location**: [populated by bootstrap]
-- **Build Command**: [populated by bootstrap]
-- **Test Command**: [populated by bootstrap]
-- **Lint Command**: [populated by bootstrap]
+- **Project**: PRDGen AI — AI-powered PRD generation via guided conversation
+- **Tech Stack**: Next.js 15 (App Router), TypeScript (strict), React 19, Tailwind CSS
+- **Primary SDK**: `@anthropic-ai/sdk` v0.68.x (Anthropic Claude TypeScript SDK)
+- **Secondary (future)**: GPT-4o via OpenAI SDK (post-MVP)
+- **Hosting**: Vercel
+- **Truth File Location**: `anthropic-sdk-truth.md` (STUB until `npm install` — see regeneration command below)
+- **SDK Rule**: `.claude/rules/nextjs-anthropic-sdk.md` (the ONE SDK-specific rule)
+
+### Commands
+- **Type-check**: `npx tsc --noEmit`
+- **Lint**: `npx next lint`
+- **Unit Tests**: `npx vitest run`
+- **Smoke Test**: `node scripts/smoke-test.js`
+- **Full Validate**: `npm run validate` (chains: type-check + lint + unit tests + smoke test)
+- **Dev Server**: `npm run dev`
+- **Build**: `npm run build`
+- **Truth File Regeneration**: `bash scripts/generate-truth-file.sh node_modules/@anthropic-ai/sdk/index.d.ts anthropic-sdk-truth.md --format ts`
+
+### Architecture
+- **Pattern**: Full-stack monolith (Next.js App Router)
+- **Frontend**: React Server Components + Client Components in `app/`
+- **Backend**: Next.js API Route Handlers in `app/api/`
+- **AI Integration**: Anthropic SDK calls in API routes only (server-side)
+- **State**: Conversation state managed client-side (React state), no database for MVP
+
+### Key Entities
+- **Session** — A conversation between user and AI to generate a PRD
+- **Message** — A single turn in the conversation (user prompt or AI response)
+- **PRD** — The generated Product Requirements Document (structured Markdown)
+- **QualityScore** — 0-10 score with per-category breakdowns (clarity, completeness, testability, AI-readiness)
+- **ChecklistItem** — A tracked item in the PRD completeness checklist
+
+### Environment Variables
+- `ANTHROPIC_API_KEY` — Required. The Anthropic API key for Claude access.
+- `NEXT_PUBLIC_*` — Only for values safe to expose to the browser.

@@ -44,7 +44,22 @@ done
 
 # ============================================
 # PROJECT-SPECIFIC PATTERNS (added by bootstrap)
-# Add domain-specific dangerous commands below:
+# Next.js + Vercel stack
 # ============================================
+
+PROJECT_PATTERNS=(
+  "vercel env rm"
+  "vercel remove"
+  "vercel delete"
+  "npx next telemetry enable"
+  "npm publish"
+)
+
+for pattern in "${PROJECT_PATTERNS[@]}"; do
+  if echo "$COMMAND" | grep -qiE "$pattern"; then
+    echo "{\"decision\": \"block\", \"reason\": \"BLOCKED: Dangerous project command detected matching pattern '$pattern'. Get explicit user approval first.\"}" >&2
+    exit 2
+  fi
+done
 
 exit 0
