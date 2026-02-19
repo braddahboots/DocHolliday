@@ -48,7 +48,26 @@ BOOTSTRAP_EOF
 fi
 
 # ============================================
-# PROJECT-SPECIFIC FACTS (added by bootstrap)
-# Add critical SDK/framework facts below that
-# the AI commonly gets wrong:
+# PROJECT-SPECIFIC FACTS (PRDGen AI — Next.js + Anthropic SDK)
 # ============================================
+
+cat << 'SDK_EOF'
+
+### Anthropic SDK Critical Facts (@anthropic-ai/sdk v0.68.x)
+- Default import: `import Anthropic from '@anthropic-ai/sdk'`
+- Core method: `client.messages.create({ model, max_tokens, messages })` — all three params required
+- System prompt is a TOP-LEVEL parameter `system: "..."`, NOT a message with `role: 'system'`
+- Response: `message.content` is an ARRAY of content blocks, not a string. Use `message.content[0].text`
+- Streaming option A: `client.messages.create({ ..., stream: true })` — raw SSE events
+- Streaming option B: `client.messages.stream({ ... })` — helper with `.on('text', cb)` and `.finalMessage()`
+- DOES NOT EXIST: `client.chat()`, `client.completions`, `role: 'system'`, `Anthropic.Models` enum
+- All Anthropic calls MUST be server-side only (API routes or Server Actions). Never call from client code.
+
+### Next.js 15 App Router Critical Facts
+- `params` in dynamic routes is a Promise — always `await params` in async page functions
+- `searchParams` in pages is also a Promise
+- `redirect()` throws internally — NEVER use inside try/catch
+- Files in `app/` are Server Components by default — only add `"use client"` for hooks/events/browser APIs
+- API routes: `app/api/.../route.ts` exporting GET, POST, etc.
+
+SDK_EOF

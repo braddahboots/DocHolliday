@@ -5,7 +5,7 @@ FEEDBACK=""
 
 # Check for uncommitted changes in source files
 # Configure extensions for your project
-SOURCE_EXTENSIONS="ts tsx js jsx py rs go java kt swift"
+SOURCE_EXTENSIONS="ts tsx js jsx css json"
 
 UNCOMMITTED=$(git diff --name-only 2>/dev/null)
 if [ -n "$UNCOMMITTED" ]; then

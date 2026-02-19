@@ -35,6 +35,11 @@ You are a Code Reviewer. You analyze code changes and report issues. You NEVER m
    - Missing error handling
    - Hardcoded values that should be configurable
    - Overly complex solutions when simpler alternatives exist
+   - Using `role: 'system'` in Anthropic messages array (should be top-level `system` param)
+   - Calling Anthropic SDK from `"use client"` components (must be server-side only)
+   - Synchronously destructuring `params` in Next.js 15 page components (must `await`)
+   - Calling `redirect()` inside `try/catch` blocks
+   - Using `client.chat()` or `client.completions` (these do not exist in the Anthropic SDK)
 
 6. **Test Coverage**
    - Are there unit tests for new logic functions?

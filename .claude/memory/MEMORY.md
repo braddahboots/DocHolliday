@@ -9,10 +9,15 @@
 ## SDK/Framework Gotchas
 > Add verified SDK-specific pitfalls here. Include version numbers.
 
-<!-- Example format:
-- [SDK v1.2.3] `SomeClass.method()` returns Promise, not direct value
-- [SDK v1.2.3] NO `FakeClass` exists — use `RealClass` instead
--->
+- [@anthropic-ai/sdk v0.68.x] System prompt is a top-level `system` parameter on the request, NOT a message with `role: 'system'`. The messages array only accepts `'user'` and `'assistant'` roles.
+- [@anthropic-ai/sdk v0.68.x] `message.content` is an array of content blocks, NOT a string. Access text via `message.content[0].text`.
+- [@anthropic-ai/sdk v0.68.x] `client.messages.stream()` helper does NOT accept `stream: true` — that param is only for `client.messages.create()`.
+- [@anthropic-ai/sdk v0.68.x] There is NO `client.chat()`, NO `client.completions`, NO `client.complete()`. Only `client.messages.create()` and `client.messages.stream()`.
+- [@anthropic-ai/sdk v0.68.x] Never call from client-side code — set `dangerouslyAllowBrowser: true` is a security risk. Route all calls through Next.js API routes.
+- [Next.js 15] `params` and `searchParams` in page/layout components are Promises — must `await` them. Synchronous destructuring causes TypeScript errors.
+- [Next.js 15] `redirect()` throws a special Next.js error internally — never use it inside `try/catch` blocks.
+- [Next.js 15] Caching defaults changed from Next.js 14: `fetch()` in Server Components is NOT cached by default.
+- [Next.js 15] `"use client"` marks Client Components. `"use server"` marks Server Actions (functions). These are NOT opposites — do not confuse them.
 
 ---
 
@@ -38,4 +43,9 @@
 
 ## Project-Specific Notes
 > Added during development as patterns emerge
+
+- PRDGen AI is a Next.js App Router full-stack app. Frontend in `app/`, API routes in `app/api/`, shared types in `lib/types/`.
+- All Anthropic SDK calls go through `app/api/` route handlers — never from client components.
+- Truth file at `anthropic-sdk-truth.md` is a STUB until `npm install` is run — regenerate with `bash scripts/generate-truth-file.sh`.
+- Model names are strings like `'claude-sonnet-4-5-20250929'` — there is no enum.
 

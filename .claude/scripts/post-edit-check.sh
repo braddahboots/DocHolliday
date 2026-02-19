@@ -22,8 +22,8 @@ fi
 # ============================================
 FILE_EXTENSIONS=(".ts" ".tsx")  # Extensions to check
 BUILD_CMD="npx tsc --noEmit"    # Type-check / compile command
-TRUTH_FILE=""                    # Path to truth file (empty = skip truth check)
-IMPORT_PATTERN=""                # Regex to extract imports — keep simple (e.g., "from 'sdk-name'" not complex lookbehinds). Must work with grep -oP.
+TRUTH_FILE="anthropic-sdk-truth.md"  # Path to truth file
+IMPORT_PATTERN="from '@anthropic-ai/sdk'"  # Regex to extract imports — keep simple. Must work with grep -oP.
 
 # ============================================
 # Check if file matches configured extensions
