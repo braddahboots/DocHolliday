@@ -1,10 +1,10 @@
-# PRDGen AI
+# DocHolliday
 
 Turn rough ideas into complete, high-quality, AI-coding-tool-ready Product Requirements Documents in minutes via guided conversation.
 
 ## What This Is
 
-PRDGen AI is a web application that guides users through a conversational interview to produce structured, scored, exportable Markdown PRDs optimized for AI coding tools (Cursor, Claude Code, etc.).
+DocHolliday is a web application that guides users through a conversational interview to produce structured, scored, exportable Markdown PRDs optimized for AI coding tools (Cursor, Claude Code, etc.).
 
 **Core flow:** User inputs a rough idea → AI detects gaps and asks targeted follow-ups → generates a structured PRD → scores it for quality (0-10) → exports clean Markdown.
 

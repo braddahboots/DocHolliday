@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Smoke test for PRDGen AI
+ * Smoke test for DocHolliday
  * Spawns `npm run dev` and waits for the Next.js dev server to be ready.
  * Exits 0 on success, 1 on failure or timeout.
  *

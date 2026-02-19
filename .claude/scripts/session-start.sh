@@ -48,7 +48,7 @@ BOOTSTRAP_EOF
 fi
 
 # ============================================
-# PROJECT-SPECIFIC FACTS (PRDGen AI — Next.js + Anthropic SDK)
+# PROJECT-SPECIFIC FACTS (DocHolliday — Next.js + Anthropic SDK)
 # ============================================
 
 cat << 'SDK_EOF'
