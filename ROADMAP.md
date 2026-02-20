@@ -19,21 +19,21 @@
 - [x] Research + document Cursor vs Claude Code spec format differences (≥3 concrete differences with examples)
 - [x] Wire up `npm run validate` with type-check, lint, unit tests, smoke test
 
-### Phase 1: Data Model + Session State
+### Phase 1: Data Model + Session State ✓
 **Dependencies:** Phase 0
-- [ ] Define TypeScript types/interfaces: PRDSession, ChecklistState, ChecklistSection, ConversationMessage, GeneratedPRD, QualityScore, QualityIssue, ExportRecord
-- [ ] Implement session state management via React Context + useReducer
-- [ ] Implement weighted completion percentage calculation (by section weight, not simple count)
-- [ ] Implement localStorage persistence with auto-save on every state change
-- [ ] Implement session recovery (detect saved session on load, offer resume or fresh start)
+- [x] Define TypeScript types/interfaces: PRDSession, ChecklistState, ChecklistSection, ConversationMessage, GeneratedPRD, QualityScore, QualityIssue, ExportRecord
+- [x] Implement session state management via React Context + useReducer
+- [x] Implement weighted completion percentage calculation (by section weight, not simple count)
+- [x] Implement localStorage persistence with auto-save on every state change
+- [x] Implement session recovery (detect saved session on load, offer resume or fresh start)
 
-### Phase 2: Checklist Engine + Gap Detection
+### Phase 2: Checklist Engine + Gap Detection ✓
 **Dependencies:** Phase 1
-- [ ] Create ChecklistEngine module with LLM-powered gap analysis
-- [ ] Implement structured prompt for section-by-section evaluation (addressed/confidence/extractedData/gaps)
-- [ ] Implement question prioritization: required sections first, then by weight descending
-- [ ] Handle malformed LLM JSON: retry once with simplified prompt, fallback to all-pending
-- [ ] Show loading state with progress indicator during gap detection (non-blocking UI)
+- [x] Create ChecklistEngine module with LLM-powered gap analysis
+- [x] Implement structured prompt for section-by-section evaluation (addressed/confidence/extractedData/gaps)
+- [x] Implement question prioritization: required sections first, then by weight descending
+- [x] Handle malformed LLM JSON: retry once with simplified prompt, fallback to all-pending
+- [x] Show loading state with progress indicator during gap detection (non-blocking UI via API route)
 
 ### Phase 3: Guided Interview UI + Conversation Flow
 **Dependencies:** Phase 1, Phase 2
