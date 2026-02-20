@@ -11,13 +11,13 @@
 **Status**: Not started
 **PRD Version**: 2.0 (NLSpec paradigm, Feb 19 2026)
 
-### Phase 0: Project Foundation + Research
+### Phase 0: Project Foundation + Research ✓
 **Dependencies:** None
-- [ ] Initialize Next.js 14+ App Router with TypeScript strict, Tailwind CSS, ESLint
-- [ ] Set up Vercel deployment pipeline (push to `main` → live within 3 min)
-- [ ] Create landing page rendering at localhost:3000
-- [ ] Research + document Cursor vs Claude Code spec format differences (≥3 concrete differences with examples)
-- [ ] Wire up `npm run validate` with type-check, lint, unit tests, smoke test
+- [x] Initialize Next.js 14+ App Router with TypeScript strict, Tailwind CSS, ESLint
+- [x] Set up Vercel deployment pipeline (push to `main` → live within 3 min)
+- [x] Create landing page rendering at localhost:3000
+- [x] Research + document Cursor vs Claude Code spec format differences (≥3 concrete differences with examples)
+- [x] Wire up `npm run validate` with type-check, lint, unit tests, smoke test
 
 ### Phase 1: Data Model + Session State
 **Dependencies:** Phase 0

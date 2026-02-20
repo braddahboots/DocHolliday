@@ -59,17 +59,33 @@
 - `session-stop.sh` — [Stop] Warns about uncommitted .ts/.tsx/.json changes
 
 ## `app/` — Next.js App Router
-- `app/layout.tsx` — Root layout with Geist fonts and global CSS
+- `app/layout.tsx` — Root layout with Geist fonts, global CSS, and Providers wrapper
 - `app/page.tsx` — Landing page with hero section and CTA
 - `app/globals.css` — Global styles (Tailwind CSS v4 import)
 
+## `components/` — Shared React Components
+- `components/providers.tsx` — Client component that wraps children in SessionProvider
+
+## `lib/types/` — TypeScript Type Definitions
+- `lib/types/session.ts` — Core data model: PRDSession, ChecklistState, ConversationMessage, GeneratedPRD, QualityScore, ExportRecord
+
+## `lib/constants/` — Constants and Configuration
+- `lib/constants/checklist.ts` — Checklist section metadata: weights, required flags, display labels
+
+## `lib/utils/` — Utility Functions
+- `lib/utils/completion.ts` — Weighted completion percentage calculator (by section weight, not simple count)
+- `lib/utils/storage.ts` — localStorage persistence: save, load, clear sessions; availability detection
+
+## `lib/context/` — React Context Providers
+- `lib/context/session-context.tsx` — Session state via React Context + useReducer; auto-save to localStorage; session recovery
+
 ## `tests/` — Unit Tests (Vitest)
 - `tests/setup.test.ts` — Project setup verification test (tsconfig strict mode)
+- `tests/completion.test.ts` — Weighted completion percentage calculation tests (6 tests)
+- `tests/storage.test.ts` — localStorage persistence round-trip tests (5 tests)
+- `tests/session-reducer.test.ts` — Session reducer action dispatch tests (8 tests)
 
 ## Not Yet Created
 > The following directories will be created as features are implemented:
 > - `app/api/` — API route handlers (Anthropic SDK calls)
-> - `components/` — Shared React components
-> - `lib/` — Shared utilities, types, constants
-> - `lib/types/` — TypeScript type definitions (Session, Message, PRD, QualityScore, etc.)
 > - `public/` — Static assets
