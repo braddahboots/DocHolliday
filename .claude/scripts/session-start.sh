@@ -1,6 +1,15 @@
 #!/bin/bash
-# SessionStart hook: Re-inject critical facts
+# SessionStart hook: Install deps + re-inject critical facts
 # These facts survive context compression in long sessions
+
+# ============================================
+# Dependency installation (node_modules not persisted between sessions)
+# ============================================
+if [ ! -d "node_modules" ]; then
+  echo "### Installing dependencies (node_modules not found)..."
+  npm install --no-audit --no-fund 2>&1 | tail -3
+  echo ""
+fi
 
 cat << 'EOF'
 ## Session Start — Critical Facts
