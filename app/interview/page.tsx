@@ -463,16 +463,8 @@ export default function InterviewPage() {
 
   return (
     <div className="h-screen flex flex-col md:flex-row">
-      {/* Mobile: checklist as collapsible top bar */}
-      <ChecklistSidebar
-        checklist={session.checklist}
-        currentSection={currentSection}
-        canGenerate={canGenerate}
-        onGeneratePRD={handleGeneratePRD}
-      />
-
       {/* Chat panel */}
-      <div className="flex-1 flex flex-col min-h-0">
+      <div className="flex-1 flex flex-col min-h-0 order-2 md:order-1">
         <ChatPanel
           messages={displayMessages}
           isLoading={isLoading}
@@ -487,8 +479,8 @@ export default function InterviewPage() {
         />
       </div>
 
-      {/* Desktop: checklist sidebar (right, 30%) */}
-      <div className="hidden md:block w-[30%] min-w-[280px] max-w-[360px]">
+      {/* Checklist sidebar: collapsible top bar on mobile, right panel on desktop */}
+      <div className="order-1 md:order-2 md:w-[30%] md:min-w-[280px] md:max-w-[360px]">
         <ChecklistSidebar
           checklist={session.checklist}
           currentSection={currentSection}
