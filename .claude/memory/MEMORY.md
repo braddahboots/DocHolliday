@@ -57,7 +57,7 @@
 
 - **What qualifies**: Missing hooks, rules that should be universal, workflow friction, session-start gaps, missing utilities
 - **What doesn't**: Project-specific bugs, one-off issues, SDK-specific gotchas (those go in SDK Gotchas above)
-- **Location**: `TEMPLATE_FEEDBACK.md` at project root — the initial post-mortem is there, commit-level observations go under `## Commit Log`
+- **Location**: `TEMPLATE_FEEDBACK.md` at project root — **overwritten fresh each commit** (not appended to). Each post-mortem is a standalone document the user feeds to the template repo for review.
 
 ---
 
