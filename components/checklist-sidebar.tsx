@@ -2,7 +2,7 @@
 
 /**
  * Checklist progress sidebar for the guided interview (Phase 3).
- * Right panel (30% width on desktop); collapses to top progress bar on mobile.
+ * Left panel (30% width on desktop); collapses to top progress bar on mobile.
  * Reads section state from SessionContext.
  */
 
@@ -120,7 +120,7 @@ export function ChecklistSidebar({
       </div>
 
       {/* Desktop: full sidebar */}
-      <div className="hidden md:flex flex-col h-full bg-gray-50 border-l border-gray-200">
+      <div className="hidden md:flex flex-col h-full bg-gray-50 border-r border-gray-200">
         <div className="p-4 border-b border-gray-200">
           <h2 className="text-sm font-semibold text-gray-900 mb-3">
             PRD Checklist
