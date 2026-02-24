@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 export default function Home() {
   return (
     <div className="grid min-h-screen items-center justify-items-center p-8 font-[family-name:var(--font-geist-sans)]">
@@ -9,12 +11,12 @@ export default function Home() {
           Turn rough ideas into complete, high-quality, AI-coding-tool-ready
           Product Requirements Documents in minutes via guided conversation.
         </p>
-        <button
-          type="button"
+        <Link
+          href="/interview"
           className="rounded-full bg-black px-8 py-3 text-sm font-medium text-white transition-colors hover:bg-gray-800"
         >
           Get Started
-        </button>
+        </Link>
       </main>
     </div>
   );
