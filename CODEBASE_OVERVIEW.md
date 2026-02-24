@@ -62,15 +62,21 @@
 - `app/layout.tsx` — Root layout with Geist fonts, global CSS, and Providers wrapper
 - `app/page.tsx` — Landing page with hero section and CTA
 - `app/globals.css` — Global styles (Tailwind CSS v4 import)
+- `app/api/gap-analysis/route.ts` — POST endpoint: runs ChecklistEngine gap detection, returns GapAnalysisResult
 
 ## `components/` — Shared React Components
 - `components/providers.tsx` — Client component that wraps children in SessionProvider
 
 ## `lib/types/` — TypeScript Type Definitions
 - `lib/types/session.ts` — Core data model: PRDSession, ChecklistState, ConversationMessage, GeneratedPRD, QualityScore, ExportRecord
+- `lib/types/gap-analysis.ts` — Gap detection types: SectionAnalysis, GapAnalysisRaw, PrioritizedQuestion, GapAnalysisResult
 
 ## `lib/constants/` — Constants and Configuration
 - `lib/constants/checklist.ts` — Checklist section metadata: weights, required flags, display labels
+
+## `lib/engine/` — AI Engine Modules
+- `lib/engine/prompts.ts` — Structured LLM prompts for gap analysis (primary + simplified retry)
+- `lib/engine/checklist-engine.ts` — ChecklistEngine: LLM gap analysis, JSON parsing, retry/fallback, question prioritization
 
 ## `lib/utils/` — Utility Functions
 - `lib/utils/completion.ts` — Weighted completion percentage calculator (by section weight, not simple count)
@@ -84,8 +90,8 @@
 - `tests/completion.test.ts` — Weighted completion percentage calculation tests (6 tests)
 - `tests/storage.test.ts` — localStorage persistence round-trip tests (5 tests)
 - `tests/session-reducer.test.ts` — Session reducer action dispatch tests (8 tests)
+- `tests/checklist-engine.test.ts` — Gap analysis JSON parsing + question prioritization tests (16 tests)
 
 ## Not Yet Created
 > The following directories will be created as features are implemented:
-> - `app/api/` — API route handlers (Anthropic SDK calls)
 > - `public/` — Static assets
