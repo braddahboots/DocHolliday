@@ -35,14 +35,14 @@
 - [x] Handle malformed LLM JSON: retry once with simplified prompt, fallback to all-pending
 - [x] Show loading state with progress indicator during gap detection (non-blocking UI via API route)
 
-### Phase 3: Guided Interview UI + Conversation Flow
+### Phase 3: Guided Interview UI + Conversation Flow ✓
 **Dependencies:** Phase 1, Phase 2
-- [ ] Build chat interface: message history, input field, send button, loading states
-- [ ] Build checklist progress sidebar (right panel, 30% width) with status icons and weights
-- [ ] Implement conversation state machine: START → QUESTION_PRESENTED → CHECK_COMPLETION → GENERATE_PRD
-- [ ] Implement smart defaults: persona inference, tech stack suggestion, auto-generated anti-requirements, KPI suggestions
-- [ ] Implement skip button per question + 10-question hard cap
-- [ ] Mobile layout: checklist collapses to top progress bar (< 768px viewport)
+- [x] Build chat interface: message history, input field, send button, loading states
+- [x] Build checklist progress sidebar (left panel, 30% width) with status icons and weights
+- [x] Implement conversation state machine: START → QUESTION_PRESENTED → CHECK_COMPLETION → GENERATE_PRD
+- [x] Implement smart defaults: persona inference, tech stack suggestion, auto-generated anti-requirements, KPI suggestions
+- [x] Implement skip button per question + 10-question hard cap
+- [x] Mobile layout: checklist collapses to top progress bar (< 768px viewport)
 
 ### Phase 4: NLSpec PRD Generation
 **Dependencies:** Phase 1, Phase 2, Phase 3
