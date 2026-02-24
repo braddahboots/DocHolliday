@@ -41,6 +41,16 @@
 
 ---
 
+## Workflow Preferences
+> How we work — agreed upon with the user
+
+- **Use `/review` before committing** — Run the code-reviewer agent to get a second pair of eyes on changes before they're committed. Don't skip this step.
+- **Use `/commit` for validated commits** — Let the devops agent handle staging, validation, and commit message formatting rather than doing git operations manually.
+- **Use the implementer agent** for feature work when parallelization or context protection is beneficial (e.g., building two independent features, or offloading a large implementation to keep the main context clean).
+- **Agent workflow**: implement → `/review` → fix issues → `/commit`
+
+---
+
 ## Project-Specific Notes
 > Added during development as patterns emerge
 
