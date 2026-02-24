@@ -8,6 +8,7 @@
 - `CODEBASE_OVERVIEW.md` — This file. File map with descriptions.
 - `PRD.md` — Product Requirements Document for DocHolliday (the product being built)
 - `ROADMAP.md` — Project status, milestones, decisions, and open questions
+- `TEMPLATE_FEEDBACK.md` — Post-mortem feedback for the base template (`braddahboots/claude-agentic-template`); updated after commits
 - `README.md` — Repository README for DocHolliday
 - `.gitignore` — Git ignore rules (node_modules, .env, truth files, IDE files)
 - `anthropic-sdk-truth.md` — SDK truth file for `@anthropic-ai/sdk` (generated from installed SDK types)
