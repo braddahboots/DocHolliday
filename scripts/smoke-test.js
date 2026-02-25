@@ -38,7 +38,7 @@ const timer = setTimeout(() => {
   cleanup(1);
 }, TIMEOUT_MS);
 
-devProcess = spawn("npm", ["run", "dev"], {
+devProcess = spawn("npm run dev", {
   cwd: process.cwd(),
   stdio: ["ignore", "pipe", "pipe"],
   env: { ...process.env, PORT: "3999" },
