@@ -178,37 +178,40 @@ export default function InterviewPage() {
 
       setIsLoading(true);
 
-      let turnResult: ConversationTurnResponse;
       try {
-        const response = await fetch('/api/conversation', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            rawIdea: session.userInput.rawIdea,
-            userMessage,
-            currentSection,
-            action: 'answer',
-          }),
+        let turnResult: ConversationTurnResponse;
+        try {
+          const response = await fetch('/api/conversation', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              rawIdea: session.userInput.rawIdea,
+              userMessage,
+              currentSection,
+              action: 'answer',
+            }),
+          });
+
+          if (!response.ok) throw new Error('Conversation API failed');
+          turnResult = (await response.json()) as ConversationTurnResponse;
+        } catch {
+          turnResult = {
+            assistantMessage: "Got it — I've recorded your response.",
+            extractedData: { user_response: userMessage },
+          };
+        }
+
+        dispatch({
+          type: 'UPDATE_SECTION',
+          section: currentSection,
+          status: 'complete',
+          data: turnResult.extractedData,
         });
 
-        if (!response.ok) throw new Error('Conversation API failed');
-        turnResult = (await response.json()) as ConversationTurnResponse;
-      } catch {
-        turnResult = {
-          assistantMessage: "Got it — I've recorded your response.",
-          extractedData: { user_response: userMessage },
-        };
+        advanceToNextQuestion(turnResult.assistantMessage);
+      } finally {
+        setIsLoading(false);
       }
-
-      dispatch({
-        type: 'UPDATE_SECTION',
-        section: currentSection,
-        status: 'complete',
-        data: turnResult.extractedData,
-      });
-
-      advanceToNextQuestion(turnResult.assistantMessage);
-      setIsLoading(false);
     },
     [currentSection, gapAnalysis, session.userInput.rawIdea, dispatch, advanceToNextQuestion],
   );
@@ -230,37 +233,40 @@ export default function InterviewPage() {
 
     setIsLoading(true);
 
-    let turnResult: ConversationTurnResponse;
     try {
-      const response = await fetch('/api/conversation', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          rawIdea: session.userInput.rawIdea,
-          userMessage: defaultContent,
-          currentSection,
-          action: 'approve_default',
-        }),
+      let turnResult: ConversationTurnResponse;
+      try {
+        const response = await fetch('/api/conversation', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            rawIdea: session.userInput.rawIdea,
+            userMessage: defaultContent,
+            currentSection,
+            action: 'approve_default',
+          }),
+        });
+
+        if (!response.ok) throw new Error('Conversation API failed');
+        turnResult = (await response.json()) as ConversationTurnResponse;
+      } catch {
+        turnResult = {
+          assistantMessage: "I've applied the suggested defaults.",
+          extractedData: { approved_default: true, content: defaultContent },
+        };
+      }
+
+      dispatch({
+        type: 'UPDATE_SECTION',
+        section: currentSection,
+        status: 'complete',
+        data: turnResult.extractedData,
       });
 
-      if (!response.ok) throw new Error('Conversation API failed');
-      turnResult = (await response.json()) as ConversationTurnResponse;
-    } catch {
-      turnResult = {
-        assistantMessage: "I've applied the suggested defaults.",
-        extractedData: { approved_default: true, content: defaultContent },
-      };
+      advanceToNextQuestion(turnResult.assistantMessage);
+    } finally {
+      setIsLoading(false);
     }
-
-    dispatch({
-      type: 'UPDATE_SECTION',
-      section: currentSection,
-      status: 'complete',
-      data: turnResult.extractedData,
-    });
-
-    advanceToNextQuestion(turnResult.assistantMessage);
-    setIsLoading(false);
   }, [currentSection, gapAnalysis, smartDefault, session.userInput.rawIdea, dispatch, advanceToNextQuestion]);
 
   /** User skips a question. */
@@ -278,36 +284,39 @@ export default function InterviewPage() {
 
     setIsLoading(true);
 
-    let turnResult: ConversationTurnResponse;
     try {
-      const response = await fetch('/api/conversation', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          rawIdea: session.userInput.rawIdea,
-          userMessage: '',
-          currentSection,
-          action: 'skip',
-        }),
+      let turnResult: ConversationTurnResponse;
+      try {
+        const response = await fetch('/api/conversation', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            rawIdea: session.userInput.rawIdea,
+            userMessage: '',
+            currentSection,
+            action: 'skip',
+          }),
+        });
+
+        if (!response.ok) throw new Error('Conversation API failed');
+        turnResult = (await response.json()) as ConversationTurnResponse;
+      } catch {
+        turnResult = {
+          assistantMessage: 'No problem — skipping this section.',
+          extractedData: {},
+        };
+      }
+
+      dispatch({
+        type: 'UPDATE_SECTION',
+        section: currentSection,
+        status: 'skipped',
       });
 
-      if (!response.ok) throw new Error('Conversation API failed');
-      turnResult = (await response.json()) as ConversationTurnResponse;
-    } catch {
-      turnResult = {
-        assistantMessage: 'No problem — skipping this section.',
-        extractedData: {},
-      };
+      advanceToNextQuestion(turnResult.assistantMessage);
+    } finally {
+      setIsLoading(false);
     }
-
-    dispatch({
-      type: 'UPDATE_SECTION',
-      section: currentSection,
-      status: 'skipped',
-    });
-
-    advanceToNextQuestion(turnResult.assistantMessage);
-    setIsLoading(false);
   }, [currentSection, gapAnalysis, session.userInput.rawIdea, dispatch, advanceToNextQuestion]);
 
   /** Step 1: User submits their raw idea. */

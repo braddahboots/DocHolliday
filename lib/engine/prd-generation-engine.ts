@@ -207,7 +207,7 @@ export async function generatePRD(
     }
   } catch (err) {
     // Re-throw rate limit errors so the route handler can return 429
-    if (err instanceof Anthropic.APIError && err.status === 429) {
+    if (err instanceof Anthropic.RateLimitError) {
       throw err;
     }
     // All other errors: fall through to mock fallback

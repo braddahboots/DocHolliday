@@ -55,13 +55,13 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     return NextResponse.json(result);
   } catch (err) {
     // If Anthropic API fails entirely, fall back to mock PRD
+    if (err instanceof Anthropic.RateLimitError) {
+      return NextResponse.json(
+        { error: 'Rate limited by Anthropic API. Please try again in 30 seconds.' },
+        { status: 429 },
+      );
+    }
     if (err instanceof Anthropic.APIError) {
-      if (err.status === 429) {
-        return NextResponse.json(
-          { error: 'Rate limited by Anthropic API. Please try again in 30 seconds.' },
-          { status: 429 },
-        );
-      }
       // For other API errors, return mock PRD so the flow isn't blocked
       const mockResult = buildMockPRD(validated.rawIdea, validated.sections);
       return NextResponse.json({ prd: mockResult, mock: true });
