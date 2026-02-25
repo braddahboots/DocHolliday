@@ -419,7 +419,6 @@ export default function InterviewPage() {
           },
         });
         dispatch({ type: 'SET_STATUS', status: 'interviewing' });
-        setIsLoading(false);
         return;
       }
 
@@ -454,9 +453,9 @@ export default function InterviewPage() {
         },
       });
       dispatch({ type: 'SET_STATUS', status: 'interviewing' });
+    } finally {
+      setIsLoading(false);
     }
-
-    setIsLoading(false);
   }, [dispatch, session.userInput.rawIdea, session.checklist.sections]);
 
   /** Route messages: initial idea vs. interview answer. */

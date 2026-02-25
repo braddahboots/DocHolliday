@@ -142,70 +142,75 @@ export function buildMockPRD(
   };
 }
 
+/** Extract text from a message response's content array, with bounds check. */
+function extractText(content: Anthropic.ContentBlock[]): string {
+  if (content.length === 0) return '';
+  return content[0].type === 'text' ? content[0].text : '';
+}
+
 /**
  * Generate a PRD from checklist data via the Anthropic API.
  * Max 2 LLM calls: primary + retry on malformed JSON.
- * Falls back to mock PRD if both calls fail.
+ * Falls back to mock PRD if both calls fail or if the API throws.
  */
 export async function generatePRD(
   rawIdea: string,
   sections: Record<ChecklistSection, ChecklistSectionState>,
 ): Promise<{ prd: GeneratedPRD; mock: boolean }> {
   const checklistContext = buildChecklistContext(sections);
-  const client = new Anthropic();
 
-  // --- Primary attempt ---
-  const primaryResponse = await client.messages.create({
-    model: MODEL,
-    max_tokens: MAX_TOKENS,
-    system: 'You are a product specification writer. You generate structured NLSpec PRDs from guided interview data. Never invent information the user did not provide or approve. Return ONLY valid JSON.',
-    messages: [
-      { role: 'user', content: buildPRDGenerationPrompt(rawIdea, checklistContext) },
-    ],
-  });
+  try {
+    const client = new Anthropic();
 
-  const primaryText =
-    primaryResponse.content[0].type === 'text'
-      ? primaryResponse.content[0].text
-      : '';
+    // --- Primary attempt ---
+    const primaryResponse = await client.messages.create({
+      model: MODEL,
+      max_tokens: MAX_TOKENS,
+      system: 'You are a product specification writer. You generate structured NLSpec PRDs from guided interview data. Never invent information the user did not provide or approve. Return ONLY valid JSON.',
+      messages: [
+        { role: 'user', content: buildPRDGenerationPrompt(rawIdea, checklistContext) },
+      ],
+    });
 
-  const primaryParsed = parsePRDJson(primaryText);
-  if (primaryParsed) {
-    return {
-      prd: {
-        version: 1,
-        generatedAt: new Date().toISOString(),
-        sections: primaryParsed,
-      },
-      mock: false,
-    };
-  }
+    const primaryParsed = parsePRDJson(extractText(primaryResponse.content));
+    if (primaryParsed) {
+      return {
+        prd: {
+          version: 1,
+          generatedAt: new Date().toISOString(),
+          sections: primaryParsed,
+        },
+        mock: false,
+      };
+    }
 
-  // --- Retry with simplified prompt ---
-  const retryResponse = await client.messages.create({
-    model: MODEL,
-    max_tokens: MAX_TOKENS,
-    system: 'Return ONLY valid JSON. No other text.',
-    messages: [
-      { role: 'user', content: buildPRDRetryPrompt(rawIdea, checklistContext) },
-    ],
-  });
+    // --- Retry with simplified prompt ---
+    const retryResponse = await client.messages.create({
+      model: MODEL,
+      max_tokens: MAX_TOKENS,
+      system: 'Return ONLY valid JSON. No other text.',
+      messages: [
+        { role: 'user', content: buildPRDRetryPrompt(rawIdea, checklistContext) },
+      ],
+    });
 
-  const retryText =
-    retryResponse.content[0].type === 'text'
-      ? retryResponse.content[0].text
-      : '';
-
-  const retryParsed = parsePRDJson(retryText);
-  if (retryParsed) {
-    return {
-      prd: {
-        version: 1,
-        generatedAt: new Date().toISOString(),
-        sections: retryParsed,
-      },
-      mock: false,
-    };
+    const retryParsed = parsePRDJson(extractText(retryResponse.content));
+    if (retryParsed) {
+      return {
+        prd: {
+          version: 1,
+          generatedAt: new Date().toISOString(),
+          sections: retryParsed,
+        },
+        mock: false,
+      };
+    }
+  } catch (err) {
+    // Re-throw rate limit errors so the route handler can return 429
+    if (err instanceof Anthropic.APIError && err.status === 429) {
+      throw err;
+    }
+    // All other errors: fall through to mock fallback
   }
 
   // --- Fallback: mock PRD ---
