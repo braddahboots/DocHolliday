@@ -23,7 +23,7 @@ import { ChatPanel } from '@/components/chat-panel';
 import { ChecklistSidebar } from '@/components/checklist-sidebar';
 import { getSmartDefault } from '@/lib/engine/conversation-engine';
 import { CHECKLIST_SECTIONS, ALL_SECTIONS } from '@/lib/constants/checklist';
-import type { ChecklistSection, ConversationMessage } from '@/lib/types/session';
+import type { ChecklistSection, ConversationMessage, GeneratedPRD } from '@/lib/types/session';
 import type { GapAnalysisResult, PrioritizedQuestion } from '@/lib/types/gap-analysis';
 import type { SmartDefault, ConversationTurnResponse } from '@/lib/types/conversation';
 
@@ -178,37 +178,40 @@ export default function InterviewPage() {
 
       setIsLoading(true);
 
-      let turnResult: ConversationTurnResponse;
       try {
-        const response = await fetch('/api/conversation', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            rawIdea: session.userInput.rawIdea,
-            userMessage,
-            currentSection,
-            action: 'answer',
-          }),
+        let turnResult: ConversationTurnResponse;
+        try {
+          const response = await fetch('/api/conversation', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              rawIdea: session.userInput.rawIdea,
+              userMessage,
+              currentSection,
+              action: 'answer',
+            }),
+          });
+
+          if (!response.ok) throw new Error('Conversation API failed');
+          turnResult = (await response.json()) as ConversationTurnResponse;
+        } catch {
+          turnResult = {
+            assistantMessage: "Got it — I've recorded your response.",
+            extractedData: { user_response: userMessage },
+          };
+        }
+
+        dispatch({
+          type: 'UPDATE_SECTION',
+          section: currentSection,
+          status: 'complete',
+          data: turnResult.extractedData,
         });
 
-        if (!response.ok) throw new Error('Conversation API failed');
-        turnResult = (await response.json()) as ConversationTurnResponse;
-      } catch {
-        turnResult = {
-          assistantMessage: "Got it — I've recorded your response.",
-          extractedData: { user_response: userMessage },
-        };
+        advanceToNextQuestion(turnResult.assistantMessage);
+      } finally {
+        setIsLoading(false);
       }
-
-      dispatch({
-        type: 'UPDATE_SECTION',
-        section: currentSection,
-        status: 'complete',
-        data: turnResult.extractedData,
-      });
-
-      advanceToNextQuestion(turnResult.assistantMessage);
-      setIsLoading(false);
     },
     [currentSection, gapAnalysis, session.userInput.rawIdea, dispatch, advanceToNextQuestion],
   );
@@ -230,37 +233,40 @@ export default function InterviewPage() {
 
     setIsLoading(true);
 
-    let turnResult: ConversationTurnResponse;
     try {
-      const response = await fetch('/api/conversation', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          rawIdea: session.userInput.rawIdea,
-          userMessage: defaultContent,
-          currentSection,
-          action: 'approve_default',
-        }),
+      let turnResult: ConversationTurnResponse;
+      try {
+        const response = await fetch('/api/conversation', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            rawIdea: session.userInput.rawIdea,
+            userMessage: defaultContent,
+            currentSection,
+            action: 'approve_default',
+          }),
+        });
+
+        if (!response.ok) throw new Error('Conversation API failed');
+        turnResult = (await response.json()) as ConversationTurnResponse;
+      } catch {
+        turnResult = {
+          assistantMessage: "I've applied the suggested defaults.",
+          extractedData: { approved_default: true, content: defaultContent },
+        };
+      }
+
+      dispatch({
+        type: 'UPDATE_SECTION',
+        section: currentSection,
+        status: 'complete',
+        data: turnResult.extractedData,
       });
 
-      if (!response.ok) throw new Error('Conversation API failed');
-      turnResult = (await response.json()) as ConversationTurnResponse;
-    } catch {
-      turnResult = {
-        assistantMessage: "I've applied the suggested defaults.",
-        extractedData: { approved_default: true, content: defaultContent },
-      };
+      advanceToNextQuestion(turnResult.assistantMessage);
+    } finally {
+      setIsLoading(false);
     }
-
-    dispatch({
-      type: 'UPDATE_SECTION',
-      section: currentSection,
-      status: 'complete',
-      data: turnResult.extractedData,
-    });
-
-    advanceToNextQuestion(turnResult.assistantMessage);
-    setIsLoading(false);
   }, [currentSection, gapAnalysis, smartDefault, session.userInput.rawIdea, dispatch, advanceToNextQuestion]);
 
   /** User skips a question. */
@@ -278,36 +284,39 @@ export default function InterviewPage() {
 
     setIsLoading(true);
 
-    let turnResult: ConversationTurnResponse;
     try {
-      const response = await fetch('/api/conversation', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          rawIdea: session.userInput.rawIdea,
-          userMessage: '',
-          currentSection,
-          action: 'skip',
-        }),
+      let turnResult: ConversationTurnResponse;
+      try {
+        const response = await fetch('/api/conversation', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            rawIdea: session.userInput.rawIdea,
+            userMessage: '',
+            currentSection,
+            action: 'skip',
+          }),
+        });
+
+        if (!response.ok) throw new Error('Conversation API failed');
+        turnResult = (await response.json()) as ConversationTurnResponse;
+      } catch {
+        turnResult = {
+          assistantMessage: 'No problem — skipping this section.',
+          extractedData: {},
+        };
+      }
+
+      dispatch({
+        type: 'UPDATE_SECTION',
+        section: currentSection,
+        status: 'skipped',
       });
 
-      if (!response.ok) throw new Error('Conversation API failed');
-      turnResult = (await response.json()) as ConversationTurnResponse;
-    } catch {
-      turnResult = {
-        assistantMessage: 'No problem — skipping this section.',
-        extractedData: {},
-      };
+      advanceToNextQuestion(turnResult.assistantMessage);
+    } finally {
+      setIsLoading(false);
     }
-
-    dispatch({
-      type: 'UPDATE_SECTION',
-      section: currentSection,
-      status: 'skipped',
-    });
-
-    advanceToNextQuestion(turnResult.assistantMessage);
-    setIsLoading(false);
   }, [currentSection, gapAnalysis, session.userInput.rawIdea, dispatch, advanceToNextQuestion]);
 
   /** Step 1: User submits their raw idea. */
@@ -386,18 +395,77 @@ export default function InterviewPage() {
     [dispatch, session.conversation.length],
   );
 
-  /** Handle the "Generate PRD" button click. */
-  const handleGeneratePRD = useCallback(() => {
+  /** Handle the "Generate PRD" button click (Phase 4). */
+  const handleGeneratePRD = useCallback(async () => {
     dispatch({ type: 'SET_STATUS', status: 'generating' });
     dispatch({
       type: 'ADD_MESSAGE',
       message: {
         role: 'assistant',
-        content: 'PRD generation is not yet implemented (Phase 4). Your checklist data is saved.',
+        content: 'Generating your PRD from the interview data. This may take up to 30 seconds...',
         relatedSection: null,
       },
     });
-  }, [dispatch]);
+    setIsLoading(true);
+
+    try {
+      const response = await fetch('/api/prd-generation', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          rawIdea: session.userInput.rawIdea,
+          sections: session.checklist.sections,
+        }),
+      });
+
+      if (response.status === 429) {
+        dispatch({
+          type: 'ADD_MESSAGE',
+          message: {
+            role: 'assistant',
+            content: 'Rate limited by the AI service. Please try again in 30 seconds.',
+            relatedSection: null,
+          },
+        });
+        dispatch({ type: 'SET_STATUS', status: 'interviewing' });
+        return;
+      }
+
+      if (!response.ok) throw new Error('PRD generation API failed');
+
+      const result = (await response.json()) as { prd: GeneratedPRD; mock: boolean };
+
+      dispatch({ type: 'SET_PRD', prd: result.prd });
+      dispatch({ type: 'SET_STATUS', status: 'complete' });
+
+      const mockNote = result.mock
+        ? '\n\n*Note: Generated using local templates (AI service unavailable). Regenerate when the API is connected for richer output.*'
+        : '';
+
+      dispatch({
+        type: 'ADD_MESSAGE',
+        message: {
+          role: 'assistant',
+          content: `Your PRD has been generated! It includes all 11 NLSpec sections based on your interview responses.${mockNote}\n\nYou can review it in the preview below.`,
+          relatedSection: null,
+        },
+      });
+
+      setPhase('complete');
+    } catch {
+      dispatch({
+        type: 'ADD_MESSAGE',
+        message: {
+          role: 'assistant',
+          content: 'There was an error generating the PRD. Your checklist data is saved — please try again.',
+          relatedSection: null,
+        },
+      });
+      dispatch({ type: 'SET_STATUS', status: 'interviewing' });
+    } finally {
+      setIsLoading(false);
+    }
+  }, [dispatch, session.userInput.rawIdea, session.checklist.sections]);
 
   /** Route messages: initial idea vs. interview answer. */
   const handleSendMessage = useCallback(
