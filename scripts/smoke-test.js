@@ -42,6 +42,7 @@ devProcess = spawn("npm", ["run", "dev"], {
   cwd: process.cwd(),
   stdio: ["ignore", "pipe", "pipe"],
   env: { ...process.env, PORT: "3999" },
+  shell: true,
 });
 
 function checkOutput(data) {
