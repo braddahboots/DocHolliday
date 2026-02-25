@@ -46,11 +46,11 @@
 
 ### Phase 4: NLSpec PRD Generation
 **Dependencies:** Phase 1, Phase 2, Phase 3
-- [ ] Implement PRD generation from completed checklist data (all 11 template sections)
-- [ ] Auto-generate Implementation Phases section from feature dependency analysis
-- [ ] Auto-generate Validation Harness (3-5 end-to-end scenarios from user stories)
-- [ ] Auto-generate Anti-Requirements for skipped/missing input
-- [ ] Mark skipped sections with `[SKIPPED — not specified by user]`
+- [x] Implement PRD generation from completed checklist data (all 11 template sections)
+- [x] Auto-generate Implementation Phases section from feature dependency analysis
+- [x] Auto-generate Validation Harness (3-5 end-to-end scenarios from user stories)
+- [x] Auto-generate Anti-Requirements for skipped/missing input
+- [x] Mark skipped sections with `[SKIPPED — not specified by user]`
 - [ ] Render PRD in preview pane within 30 seconds
 
 ### Phase 5: Quality Scorer (Checklist + Scenario-Based)
