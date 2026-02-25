@@ -66,6 +66,7 @@
 - `app/interview/page.tsx` — Guided interview page: orchestrates conversation flow, gap analysis, checklist updates, session recovery
 - `app/api/gap-analysis/route.ts` — POST endpoint: runs ChecklistEngine gap detection, returns GapAnalysisResult
 - `app/api/conversation/route.ts` — POST endpoint: processes a single conversation turn (answer/skip/approve_default)
+- `app/api/prd-generation/route.ts` — POST endpoint: generates NLSpec PRD from checklist data via LLM (Phase 4)
 
 ## `components/` — Shared React Components
 - `components/providers.tsx` — Client component that wraps children in SessionProvider
@@ -84,6 +85,8 @@
 - `lib/engine/prompts.ts` — Structured LLM prompts for gap analysis (primary + simplified retry)
 - `lib/engine/checklist-engine.ts` — ChecklistEngine: LLM gap analysis, JSON parsing, retry/fallback, question prioritization
 - `lib/engine/conversation-engine.ts` — Conversation turn processor with mock responses; smart defaults for personas, tech, anti-reqs, metrics
+- `lib/engine/prd-prompts.ts` — Structured LLM prompts for PRD generation (primary + simplified retry)
+- `lib/engine/prd-generation-engine.ts` — PRD generation engine: LLM calls, JSON parsing, mock fallback, builds GeneratedPRD from checklist data
 
 ## `lib/utils/` — Utility Functions
 - `lib/utils/completion.ts` — Weighted completion percentage calculator (by section weight, not simple count)
@@ -100,6 +103,7 @@
 - `tests/checklist-engine.test.ts` — Gap analysis JSON parsing + question prioritization tests (16 tests)
 - `tests/conversation-engine.test.ts` — Conversation engine mock responses + smart default tests (11 tests)
 - `tests/conversation-api.test.ts` — Conversation API route validation + response shape tests (10 tests)
+- `tests/prd-generation-engine.test.ts` — PRD generation JSON parsing, mock PRD builder, prompt builder tests (30 tests)
 
 ## Not Yet Created
 > The following directories will be created as features are implemented:

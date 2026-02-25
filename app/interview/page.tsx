@@ -23,7 +23,7 @@ import { ChatPanel } from '@/components/chat-panel';
 import { ChecklistSidebar } from '@/components/checklist-sidebar';
 import { getSmartDefault } from '@/lib/engine/conversation-engine';
 import { CHECKLIST_SECTIONS, ALL_SECTIONS } from '@/lib/constants/checklist';
-import type { ChecklistSection, ConversationMessage } from '@/lib/types/session';
+import type { ChecklistSection, ConversationMessage, GeneratedPRD } from '@/lib/types/session';
 import type { GapAnalysisResult, PrioritizedQuestion } from '@/lib/types/gap-analysis';
 import type { SmartDefault, ConversationTurnResponse } from '@/lib/types/conversation';
 
@@ -386,18 +386,78 @@ export default function InterviewPage() {
     [dispatch, session.conversation.length],
   );
 
-  /** Handle the "Generate PRD" button click. */
-  const handleGeneratePRD = useCallback(() => {
+  /** Handle the "Generate PRD" button click (Phase 4). */
+  const handleGeneratePRD = useCallback(async () => {
     dispatch({ type: 'SET_STATUS', status: 'generating' });
     dispatch({
       type: 'ADD_MESSAGE',
       message: {
         role: 'assistant',
-        content: 'PRD generation is not yet implemented (Phase 4). Your checklist data is saved.',
+        content: 'Generating your PRD from the interview data. This may take up to 30 seconds...',
         relatedSection: null,
       },
     });
-  }, [dispatch]);
+    setIsLoading(true);
+
+    try {
+      const response = await fetch('/api/prd-generation', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          rawIdea: session.userInput.rawIdea,
+          sections: session.checklist.sections,
+        }),
+      });
+
+      if (response.status === 429) {
+        dispatch({
+          type: 'ADD_MESSAGE',
+          message: {
+            role: 'assistant',
+            content: 'Rate limited by the AI service. Please try again in 30 seconds.',
+            relatedSection: null,
+          },
+        });
+        dispatch({ type: 'SET_STATUS', status: 'interviewing' });
+        setIsLoading(false);
+        return;
+      }
+
+      if (!response.ok) throw new Error('PRD generation API failed');
+
+      const result = (await response.json()) as { prd: GeneratedPRD; mock: boolean };
+
+      dispatch({ type: 'SET_PRD', prd: result.prd });
+      dispatch({ type: 'SET_STATUS', status: 'complete' });
+
+      const mockNote = result.mock
+        ? '\n\n*Note: Generated using local templates (AI service unavailable). Regenerate when the API is connected for richer output.*'
+        : '';
+
+      dispatch({
+        type: 'ADD_MESSAGE',
+        message: {
+          role: 'assistant',
+          content: `Your PRD has been generated! It includes all 11 NLSpec sections based on your interview responses.${mockNote}\n\nYou can review it in the preview below.`,
+          relatedSection: null,
+        },
+      });
+
+      setPhase('complete');
+    } catch {
+      dispatch({
+        type: 'ADD_MESSAGE',
+        message: {
+          role: 'assistant',
+          content: 'There was an error generating the PRD. Your checklist data is saved — please try again.',
+          relatedSection: null,
+        },
+      });
+      dispatch({ type: 'SET_STATUS', status: 'interviewing' });
+    }
+
+    setIsLoading(false);
+  }, [dispatch, session.userInput.rawIdea, session.checklist.sections]);
 
   /** Route messages: initial idea vs. interview answer. */
   const handleSendMessage = useCallback(
